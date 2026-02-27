@@ -1,4 +1,6 @@
 import uuid
+import json
+import os
 #Build a simple expense tracker application to manage your finances. The application should allow users to add, delete, and view their expenses. The application should also provide a summary of the expenses.
 # requirements : 
 #Requirements
@@ -23,7 +25,19 @@ class Expense:
 
 #expenses block defining the logic or adding the first 
 
-expenses = {}   
+expense = {}
+expense_f = "expense.json"    #file initialization
+if os.path.exists(expense_f):
+   with open(expense_f,"r") as f:      #checking file existence
+      try :
+         data = json.load(f)
+         expenses =  deserialize(data)
+      except json.JSONDecodeError:    #Loading the file if it exists{to memory}
+         expenses = {}
+else:
+   expenses = {}                         #If it doesnt exist expenses is made then its made empty.
+
+
 
 
 def add():
@@ -53,15 +67,17 @@ def view():
      print("-"*20)
 
 
+
 def delete():
    expense_d = input("Enter the name of the expense you want to delete")
    for expense_id, expense in expenses.items():
       if expense.name == expense_d:
-         del expense_id[expense]
+         del expenses[expense_id]
+         
          print("The expense was deleted gracefully and successfully")
       else:
          print("The expense was not found.")
-        
+      break
 
 def update():
    expense_a = input("what is the name of your expense you wish to update")
@@ -85,6 +101,15 @@ def update():
          break
    else: 
          print("expense not found")
+ 
+
+
+   with open(expense_f,"w") as f:
+      json.dump(serialize(),f)
+      return data
+
+   
+
 
 def summarize():
    decision =int(input( """Would you like a summary of a specific month
@@ -108,6 +133,29 @@ def summarize_all():
             print(f"{expense.month} : {expense.budget_amount}")
             print(f"Your total expenditure for {expense.month} is {total}  ")
 
+def serialize():
+   data = {}
+   for expense_id,expense in expenses.items():
+      data[expense_id] = {
+         "name" : expense.name,
+         "dsc" : expense.dsc,
+         "budget_amount" : expense.budget_amount,
+         "month" : expense.month,
+      }
+
+   
+def deserialize():
+   data = {}
+   expenses = {}
+   for expense_id, expense in data.items():
+      expenses[expense_id] = Expense(
+         expense["name"],
+         expense["dsc"],
+         expense["month"],
+         expense["budgeted_amount"]
+      )
+      return expenses
+      
 
 while 1>0:
    do = input("""----------------------------------------------------------
@@ -115,7 +163,8 @@ while 1>0:
                If you want to view all expenses - press v
               If you want to update all expenses - press u
               if you want to summarrize all expenses - press s
-              if you want to add an expense - press o""")
+              if you want to add an expense - press o
+              If you want to quit the meny press q""")
    if do.lower() == "v":
        view()
    elif do.lower() == "u":
@@ -124,18 +173,11 @@ while 1>0:
        summarize()
    elif do.lower() == "o":
        add()
-   break
-else:
-      print("Your input doesnt match my db please ")
+   elif do.lower() == "q":
+       break
+   else:
+      print("Your input doesnt match my db  ")
 
-   
-            
-            
-            
-
-
-   
- 
 
 
 
