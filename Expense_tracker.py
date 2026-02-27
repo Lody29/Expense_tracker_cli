@@ -25,21 +25,6 @@ class Expense:
 
 #expenses block defining the logic or adding the first 
 
-expense = {}
-expense_f = "expense.json"    #file initialization
-if os.path.exists(expense_f):
-   with open(expense_f,"r") as f:      #checking file existence
-      try :
-         data = json.load(f)
-         expenses =  deserialize(data)
-      except json.JSONDecodeError:    #Loading the file if it exists{to memory}
-         expenses = {}
-else:
-   expenses = {}                         #If it doesnt exist expenses is made then its made empty.
-
-
-
-
 def add():
     expense_id = str(uuid.uuid4())
     name = input("Name: ")
@@ -75,9 +60,10 @@ def delete():
          del expenses[expense_id]
          
          print("The expense was deleted gracefully and successfully")
+         break
       else:
          print("The expense was not found.")
-      break
+        
 
 def update():
    expense_a = input("what is the name of your expense you wish to update")
@@ -106,8 +92,7 @@ def update():
 
    with open(expense_f,"w") as f:
       json.dump(serialize(),f)
-      return data
-
+      
    
 
 
@@ -142,10 +127,9 @@ def serialize():
          "budget_amount" : expense.budget_amount,
          "month" : expense.month,
       }
-
+   return data
    
-def deserialize():
-   data = {}
+def deserialize(data):
    expenses = {}
    for expense_id, expense in data.items():
       expenses[expense_id] = Expense(
@@ -156,6 +140,23 @@ def deserialize():
       )
       return expenses
       
+
+
+expense = {}
+expense_f = "expense.json"    #file initialization
+if os.path.exists(expense_f):
+   with open(expense_f,"r") as f:      #checking file existence
+      try :
+         data = json.load(f)
+         expenses =  deserialize(data)
+      except json.JSONDecodeError:    #Loading the file if it exists{to memory}
+         expenses = {}
+else:
+   expenses = {}                         #If it doesnt exist expenses is made then its made empty.
+
+
+
+
 
 while 1>0:
    do = input("""----------------------------------------------------------
@@ -177,7 +178,7 @@ while 1>0:
        break
    else:
       print("Your input doesnt match my db  ")
-
+#thats alot
 
 
 
