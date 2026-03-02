@@ -12,10 +12,10 @@ import os
 # view a summarry of expenses for a specific month.
 # allow users to export expenxes to csv file
 class Expense:
- def __init__(self,name,dsc,budgeted_amount,month):
+ def __init__(self,name,dsc,budget_amount,month):
     self.name = str(name)
     self.dsc = str(dsc)                         #initialization of class expense
-    self.budget_amount = float(budgeted_amount)
+    self.budget_amount = float(budget_amount)
     self.month = month
     #I quickly realize adding input to these guys wount assist in capturing the input
 
@@ -31,8 +31,8 @@ def add():
     dsc = input("description : ")
     month = int(input("month : "))
     if 1 <= month <= 12 : 
-      budgeted_amount = float(input("budgeted_amount"))
-      new_expense = Expense(name,dsc,budgeted_amount,month)
+      budget_amount = float(input("budgeted_amount"))
+      new_expense = Expense(name,dsc,budget_amount,month)
       expenses[expense_id] = new_expense
       print("Expense added successfully.")
     else:
@@ -116,7 +116,7 @@ def summarize_all():
       for expense_id,expense in expenses.items(): 
             total += expense.budget_amount
             print(f"{expense.month} : {expense.budget_amount}")
-            print(f"Your total expenditure for {expense.month} is {total}  ")
+      print(f"Your total expenditure for {expense.month} is {total}  ")
 
 def serialize():
    data = {}
@@ -136,9 +136,9 @@ def deserialize(data):
          expense["name"],
          expense["dsc"],
          expense["month"],
-         expense["budgeted_amount"]
+         expense["budget_amount"]
       )
-      return expenses
+   return expenses
       
 
 
